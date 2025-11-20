@@ -14,6 +14,7 @@ var (
 	flagJSON    = flag.Bool("json", false, "Ausgabe als JSON")
 	flagVersion = flag.Bool("v", false, "Version anzeigen")
 	flagHelp    = flag.Bool("h", false, "Hilfe anzeigen")
+	flagProxy   = flag.String("proxy", "", "Proxy-URL (unterstützt http://, https://, socks5://)")
 )
 
 func main() {
@@ -37,6 +38,27 @@ func main() {
 	}
 
 	target := flag.Arg(0)
+
+	// Configure proxy if specified via flag or environment variables
+	proxyURL := *flagProxy
+	if proxyURL == "" {
+		// Check environment variables (HTTP_PROXY, HTTPS_PROXY, http_proxy, https_proxy)
+		if proxy := os.Getenv("HTTPS_PROXY"); proxy != "" {
+			proxyURL = proxy
+		} else if proxy := os.Getenv("https_proxy"); proxy != "" {
+			proxyURL = proxy
+		} else if proxy := os.Getenv("HTTP_PROXY"); proxy != "" {
+			proxyURL = proxy
+		} else if proxy := os.Getenv("http_proxy"); proxy != "" {
+			proxyURL = proxy
+		}
+	}
+
+	if proxyURL != "" {
+		config := whois.DefaultClientConfig()
+		config.ProxyURL = proxyURL
+		whois.SetDefaultClientConfig(config)
+	}
 
 	if whois.IsIP(target) {
 		whois.LookupIP(target, *flagJSON)

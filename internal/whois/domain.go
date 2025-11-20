@@ -3,7 +3,6 @@ package whois
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"os"
 	"time"
 )
@@ -19,7 +18,13 @@ type WhoisResponse struct {
 }
 
 func LookupDomain(domain string, asJSON bool) {
-	resp, err := http.Get("https://api.whois.vu/?q=" + domain)
+	client, err := GetDefaultHTTPClient()
+	if err != nil {
+		fmt.Println("Fehler beim Erstellen des HTTP-Clients:", err)
+		os.Exit(1)
+	}
+
+	resp, err := client.Get("https://api.whois.vu/?q=" + domain)
 	if err != nil {
 		fmt.Println("Fehler beim Abrufen:", err)
 		os.Exit(1)
