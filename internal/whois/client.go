@@ -15,6 +15,10 @@ type ClientConfig struct {
 	// ProxyURL is the proxy server URL (supports http, https, socks5)
 	ProxyURL string
 	
+	// ProxyAuth holds proxy authentication credentials (username and password)
+	// Used for SOCKS5 proxies with authentication
+	ProxyAuth *proxy.Auth
+	
 	// CustomDialer allows passing a custom dialer
 	CustomDialer proxy.Dialer
 	
@@ -53,8 +57,19 @@ func (c *ClientConfig) NewHTTPClient() (*http.Client, error) {
 
 		switch proxyURL.Scheme {
 		case "socks5":
-			// Create SOCKS5 dialer
-			dialer, err = proxy.SOCKS5("tcp", proxyURL.Host, nil, proxy.Direct)
+			// Create SOCKS5 dialer with optional authentication
+			var auth *proxy.Auth
+			if c.ProxyAuth != nil {
+				auth = c.ProxyAuth
+			} else if proxyURL.User != nil {
+				// Extract authentication from URL if provided
+				password, _ := proxyURL.User.Password()
+				auth = &proxy.Auth{
+					User:     proxyURL.User.Username(),
+					Password: password,
+				}
+			}
+			dialer, err = proxy.SOCKS5("tcp", proxyURL.Host, auth, proxy.Direct)
 			if err != nil {
 				return nil, err
 			}

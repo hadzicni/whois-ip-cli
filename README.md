@@ -108,6 +108,9 @@ Use the `-proxy` flag to specify a proxy URL:
 # SOCKS5 proxy
 whoiscli -proxy socks5://127.0.0.1:1080 example.com
 
+# SOCKS5 proxy with authentication
+whoiscli -proxy socks5://username:password@127.0.0.1:1080 example.com
+
 # HTTP proxy
 whoiscli -proxy http://proxy.example.com:8080 8.8.8.8
 

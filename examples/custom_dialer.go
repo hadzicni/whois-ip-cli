@@ -20,6 +20,31 @@ func exampleWithProxyURL() {
 	whois.LookupIP("8.8.8.8", false)
 }
 
+// Example 1b: Using a SOCKS5 proxy with authentication via URL
+func exampleWithSOCKS5Auth() {
+	config := whois.DefaultClientConfig()
+	// Authentication credentials can be embedded in the URL
+	config.ProxyURL = "socks5://username:password@127.0.0.1:1080"
+	whois.SetDefaultClientConfig(config)
+
+	// Now all lookups will use the SOCKS5 proxy with authentication
+	whois.LookupIP("8.8.8.8", false)
+}
+
+// Example 1c: Using a SOCKS5 proxy with authentication via ProxyAuth
+func exampleWithSOCKS5AuthStruct() {
+	config := whois.DefaultClientConfig()
+	config.ProxyURL = "socks5://127.0.0.1:1080"
+	config.ProxyAuth = &proxy.Auth{
+		User:     "username",
+		Password: "password",
+	}
+	whois.SetDefaultClientConfig(config)
+
+	// Now all lookups will use the SOCKS5 proxy with authentication
+	whois.LookupIP("8.8.8.8", false)
+}
+
 // Example 2: Using a custom dialer
 func exampleWithCustomDialer() {
 	// Create a custom SOCKS5 dialer
@@ -113,6 +138,8 @@ func main() {
 	
 	// Uncomment to run examples:
 	// exampleWithProxyURL()
+	// exampleWithSOCKS5Auth()
+	// exampleWithSOCKS5AuthStruct()
 	// exampleWithCustomDialer()
 	// exampleWithDialerFunc()
 	// exampleWithHTTPProxy()
