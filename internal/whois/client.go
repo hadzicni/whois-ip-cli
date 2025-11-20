@@ -14,17 +14,17 @@ import (
 type ClientConfig struct {
 	// ProxyURL is the proxy server URL (supports http, https, socks5)
 	ProxyURL string
-	
+
 	// ProxyAuth holds proxy authentication credentials (username and password)
 	// Used for SOCKS5 proxies with authentication
 	ProxyAuth *proxy.Auth
-	
+
 	// CustomDialer allows passing a custom dialer
 	CustomDialer proxy.Dialer
-	
+
 	// DialerFunc allows passing a custom dialer creation function
 	DialerFunc func() (proxy.Dialer, error)
-	
+
 	// Timeout for HTTP requests
 	Timeout time.Duration
 }

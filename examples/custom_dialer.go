@@ -64,7 +64,7 @@ func exampleWithCustomDialer() {
 // Example 3: Using a custom dialer creation function
 func exampleWithDialerFunc() {
 	config := whois.DefaultClientConfig()
-	
+
 	// Set a dialer creation function that returns a custom dialer
 	config.DialerFunc = func() (proxy.Dialer, error) {
 		// You could implement custom logic here, like rotating proxies
@@ -74,7 +74,7 @@ func exampleWithDialerFunc() {
 			KeepAlive: 30 * time.Second,
 		}, nil
 	}
-	
+
 	whois.SetDefaultClientConfig(config)
 
 	// Now all lookups will use the dialer from the function
@@ -96,46 +96,46 @@ func examplePerRequestProxy() {
 	// Create a config for SOCKS5 proxy
 	socksConfig := whois.DefaultClientConfig()
 	socksConfig.ProxyURL = "socks5://127.0.0.1:1080"
-	
+
 	// Get a client with SOCKS5 proxy
 	socksClient, err := socksConfig.NewHTTPClient()
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	// Use the client for a specific request
 	resp, err := socksClient.Get("https://api.whois.vu/?q=example.com")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
-	
+
 	fmt.Println("Response status:", resp.Status)
-	
+
 	// Create another config for HTTP proxy
 	httpConfig := whois.DefaultClientConfig()
 	httpConfig.ProxyURL = "http://proxy.example.com:8080"
-	
+
 	// Get a client with HTTP proxy
 	httpClient, err := httpConfig.NewHTTPClient()
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	// Use the HTTP proxy client for another request
 	resp2, err := httpClient.Get("http://ip-api.com/json/8.8.8.8")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer resp2.Body.Close()
-	
+
 	fmt.Println("Response status:", resp2.Status)
 }
 
 func main() {
 	fmt.Println("See individual example functions for different proxy usage patterns")
 	fmt.Println("Uncomment the function you want to test")
-	
+
 	// Uncomment to run examples:
 	// exampleWithProxyURL()
 	// exampleWithSOCKS5Auth()
