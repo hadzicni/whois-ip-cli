@@ -12,6 +12,7 @@
 *.so
 *.dylib
 whoiscli
+custom_dialer
 
 # Test binary, built with `go test -c`
 *.test
