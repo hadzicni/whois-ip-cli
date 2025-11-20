@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
-	"net/http"
 	"os"
 )
 
@@ -26,7 +25,13 @@ func IsIP(input string) bool {
 }
 
 func LookupIP(ip string, asJSON bool) {
-	resp, err := http.Get("http://ip-api.com/json/" + ip)
+	client, err := GetDefaultHTTPClient()
+	if err != nil {
+		fmt.Println("Fehler beim Erstellen des HTTP-Clients:", err)
+		os.Exit(1)
+	}
+
+	resp, err := client.Get("http://ip-api.com/json/" + ip)
 	if err != nil {
 		fmt.Println("Fehler:", err)
 		os.Exit(1)
